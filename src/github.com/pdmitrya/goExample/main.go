@@ -32,5 +32,5 @@ func main() {
     router.POST("/service/clear", routes.ClearService)
     router.GET("/service/status", routes.StatusService)
 
-    log.Fatal(http.ListenAndServe(":5050", router))
+    log.Fatal(http.ListenAndServe(":5000", router))
 }
