@@ -31,7 +31,8 @@ ENV GOPATH $HOME/go/db_forum
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH &&\
 export PATH=$PATH:/usr/local/go/bin
 
-ADD ./src $GOPATH/src/
+WORKDIR $GOPATH/src
+ADD . $GOPATH/src/
 EXPOSE 5000
 WORKDIR $GOPATH/src/goExample
 
