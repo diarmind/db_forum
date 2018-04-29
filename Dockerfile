@@ -6,7 +6,7 @@ USER root
 ENV PGVER 9.5
 RUN apt-get update -q
 RUN apt-get install -q -y wget
-RUN apt-get install -q -y postgresql-PGVER
+RUN apt-get install -q -y postgresql-$PGVER
 
 USER postgres
 
