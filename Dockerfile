@@ -34,7 +34,7 @@ export PATH=$PATH:/usr/local/go/bin
 
 ADD ./src $GOPATH/src/
 EXPOSE 5000
-WORKDIR $GOPATH/src/goExample
+WORKDIR $GOPATH
 
 RUN apt-get install -q -y git
 RUN go get github.com/dimfeld/httptreemux
