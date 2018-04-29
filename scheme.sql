@@ -4,9 +4,9 @@ CREATE USER forum_admin WITH password 'forum_password';
 
 ALTER DATABASE db_forum OWNER TO forum_admin;
 
-CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
-
 \connect db_forum
+
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 CREATE TABLE Forum_User(
   id SERIAL PRIMARY KEY NOT NULL,
