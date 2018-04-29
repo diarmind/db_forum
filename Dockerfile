@@ -37,4 +37,8 @@ ADD . $GOPATH/src/
 EXPOSE 5000
 WORKDIR $GOPATH/src/goExample
 
+RUN apt-get install -q -y git
+RUN go get github.com/dimfeld/httptreemux
+RUN go get github.com/lib/pq
+
 CMD service postgresql start && go build github.com/pdmitrya/goExample && ./goExample
