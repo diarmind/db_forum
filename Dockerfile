@@ -2,15 +2,13 @@ FROM ubuntu:16.04
 
 USER root
 
-ENV PG_VERSION 9.6
 
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-
-RUN apt-get -y update && apt-get install -y wget
-
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-
-RUN apt-get -y update && apt-get install -y postgresql-$PG_VERSION
+ENV PGVER 10
+RUN apt-get update -q
+RUN apt-get install -q -y wget
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && echo "deb http://apt.postgresql.org/pub/repos/apt/ zesty-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+RUN apt-get update -q
+RUN apt-get install -q -y git golang-go postgresql-10 postgresql-contrib-10
 
 USER postgres
 
