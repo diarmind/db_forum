@@ -8,6 +8,7 @@ RUN apt-get update -q
 RUN apt-get install -q -y wget
 RUN apt-get install -q -y postgresql-$PGVER
 
+
 USER postgres
 
 RUN /etc/init.d/postgresql start &&\
