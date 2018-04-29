@@ -11,6 +11,8 @@ RUN apt-get install -q -y postgresql-$PGVER
 
 USER postgres
 
+COPY scheme.sql scheme.sql
+
 RUN /etc/init.d/postgresql start &&\
     psql -a -f scheme.sql &&\
     /etc/init.d/postgresql stop
