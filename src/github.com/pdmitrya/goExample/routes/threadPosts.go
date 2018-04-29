@@ -115,7 +115,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 		if desc == "true" {
 			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from '\..*$') DESC NULLS LAST, path DESC `)
 		} else {
-			queryBuilder.WriteString("ORDER BY path ASC, created ASC, id ASC ")
+			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') ASC, substring(path from '\..*$') ASC NULLS FIRST, path ASC `)
 		}
 
 		if len(limit) > 0 {
