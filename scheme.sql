@@ -6,9 +6,9 @@ ALTER DATABASE db_forum OWNER TO forum_admin;
 
 \connect db_forum
 
-SET ROLE forum_admin;
-
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+SET ROLE forum_admin;
 
 CREATE TABLE Forum_User(
   id SERIAL PRIMARY KEY NOT NULL,
