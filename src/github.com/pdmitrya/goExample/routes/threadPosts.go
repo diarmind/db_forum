@@ -89,7 +89,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
       								P.thread_id,
       								P.parent,
       								P.id,
-      								CONCAT_WS('.', PT.path, P.id::text)
+      								CONCAT_WS('ZZZ', PT.path, P.id::text)
 									FROM Post P
 									INNER JOIN PostParentTree PT ON P.parent = PT.id
 									JOIN Forum_User U on P.user_id = U.id
@@ -113,9 +113,9 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 		}
 
 		if desc == "true" {
-			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from '\..*$') DESC NULLS LAST, path DESC `)
+			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from 'ZZZ.*$') DESC NULLS LAST, path DESC `)
 		} else {
-			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') ASC, substring(path from '\..*$') ASC NULLS FIRST, path ASC `)
+			queryBuilder.WriteString("ORDER BY path ASC, created ASC, id ASC ")
 		}
 
 		if len(limit) > 0 {
@@ -156,7 +156,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
       								P.thread_id,
       								P.parent,
       								P.id,
-      								CONCAT_WS('.', PT.path, P.id::text)
+      								CONCAT_WS('ZZZ', PT.path, P.id::text)
 									FROM Post P
 									INNER JOIN PostParentTree PT ON P.parent = PT.id
 									JOIN Forum_User U on P.user_id = U.id
@@ -193,7 +193,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 		queryBuilder.WriteString(") ")
 
 		if desc == "true" {
-			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from '\..*$') ASC NULLS FIRST, path DESC `)
+			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from 'ZZZ.*$') ASC NULLS FIRST, path DESC `)
 		} else {
 			queryBuilder.WriteString("ORDER BY path ASC, created ASC, id ASC ")
 		}
