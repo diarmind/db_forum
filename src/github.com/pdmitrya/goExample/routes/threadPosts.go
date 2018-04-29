@@ -135,7 +135,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
       								P.thread_id,
       								P.parent AS parentId,
       								P.id,
-									P.id::text AS path
+									intset(P.id) AS path
 									FROM Post P
 									JOIN Forum_User U on P.user_id = U.id
       								JOIN Thread T on P.thread_id = T.id
@@ -156,7 +156,7 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
       								P.thread_id,
       								P.parent,
       								P.id,
-      								CONCAT_WS('.', PT.path, P.id::text)
+      								PT.path + P.id
 									FROM Post P
 									INNER JOIN PostParentTree PT ON P.parent = PT.id
 									JOIN Forum_User U on P.user_id = U.id
@@ -165,14 +165,14 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 									)
 								)
 									SELECT pt1.nickname, pt1.created, pt1.slug, pt1.isEdited, pt1.message, pt1.thread_id, pt1.parentId, pt1.id FROM PostParentTree pt1
-  										WHERE substring(pt1.path from '^\d+') IN (
+  										WHERE subarray(pt1.path, 1, 1) IN (
   											SELECT path FROM PostParentTree `)
 
 		if len(since) > 0 {
 			if desc == "true" {
-				queryBuilder.WriteString(`WHERE path < (SELECT substring(path from '^\d+') FROM PostParentTree WHERE id = $2) `)
+				queryBuilder.WriteString(`WHERE subarray(path, 1, 1) < (SELECT subarray(path, 1, 1) FROM PostParentTree WHERE id = $2) `)
 			} else {
-				queryBuilder.WriteString(`WHERE path > (SELECT substring(path from '^\d+') FROM PostParentTree WHERE id = $2) `)
+				queryBuilder.WriteString(`WHERE subarray(path, 1, 1) > (SELECT subarray(path, 1, 1) FROM PostParentTree WHERE id = $2) `)
 			}
 		} else {
 			queryBuilder.WriteString("WHERE (TRUE OR ($2::TEXT != '')) ")
@@ -181,9 +181,9 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 		queryBuilder.WriteString("AND parentId IS NULL ")
 
 		if desc == "true" {
-			queryBuilder.WriteString(`ORDER BY path COLLATE "C" DESC, created ASC, id ASC `)
+			queryBuilder.WriteString(`ORDER BY path DESC, created ASC, id ASC `)
 		} else {
-			queryBuilder.WriteString(`ORDER BY path COLLATE "C" ASC, created ASC, id ASC `)
+			queryBuilder.WriteString(`ORDER BY path ASC, created ASC, id ASC `)
 		}
 
 		if len(limit) > 0 {
@@ -193,9 +193,9 @@ func ThreadPosts(w http.ResponseWriter, r *http.Request, p map[string]string) {
 		queryBuilder.WriteString(") ")
 
 		if desc == "true" {
-			queryBuilder.WriteString(`ORDER BY substring(path from '^\d+') DESC, substring(path from '\..*$') ASC NULLS FIRST, path COLLATE "C" DESC `)
+			queryBuilder.WriteString(`ORDER BY subarray(path, 1, 1) DESC, subarray(path, 2) ASC NULLS FIRST, path DESC `)
 		} else {
-			queryBuilder.WriteString(`ORDER BY path COLLATE "C" ASC, created ASC, id ASC `)
+			queryBuilder.WriteString(`ORDER BY path ASC, created ASC, id ASC `)
 		}
 
 	}
