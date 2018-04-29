@@ -7,6 +7,7 @@ ALTER DATABASE db_forum OWNER TO forum_admin;
 \connect db_forum
 
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS intarray WITH SCHEMA public;
 
 SET ROLE forum_admin;
 
